@@ -1,24 +1,33 @@
-import React from 'react';
+import React, { useContext, useEffect, useRef } from 'react';
+import WebSocketContext from '../context/WebSocketContext';
 import './MessageList.css';
 
 const MessageList = () => {
-  // Sample message data
-  const messages = [
-    { id: 1, text: '안녕하세요!', sender: 'other' },
-    { id: 2, text: '네, 안녕하세요! 반갑습니다.', sender: 'me' },
-    { id: 3, text: '채팅 UI가 정말 깔끔하네요.', sender: 'other' },
-    { id: 4, text: '감사합니다! LINE 메신저 스타일로 만들어봤어요.', sender: 'me' },
-  ];
+  const { messages, user } = useContext(WebSocketContext);
+  const messagesEndRef = useRef(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
 
   return (
     <div className="message-list">
-      {messages.map(message => (
-        <div key={message.id} className={`message-item ${message.sender}`}>
+      {messages.map((message, index) => (
+        <div 
+          key={index} 
+          className={`message-item ${message.sender === user.username ? 'me' : 'other'}`}
+        >
           <div className="message-bubble">
-            {message.text}
+            {message.sender !== user.username && <div className="sender-name">{message.sender}</div>}
+            {message.content}
           </div>
         </div>
       ))}
+      <div ref={messagesEndRef} />
     </div>
   );
 };

@@ -36,3 +36,10 @@
   background-color: #ffffff; /* Other's message bubble color */
   border-bottom-left-radius: 5px;
 }
+
+.sender-name {
+  font-weight: bold;
+  font-size: 0.8em;
+  margin-bottom: 4px;
+  color: #555;
+}

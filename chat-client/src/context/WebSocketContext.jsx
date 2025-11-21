@@ -12,7 +12,7 @@ export const WebSocketProvider = ({ children }) => {
   const [recipient, setRecipient] = useState('');
 
   const connect = useCallback((username) => {
-    const socket = new SockJS('http://localhost:8080/ws'); // 서버 WebSocket 엔드포인트
+    const socket = new SockJS(`http://localhost:8080/ws?username=${username}`); // 서버 WebSocket 엔드포인트
     const client = new Client({
       webSocketFactory: () => socket,
       debug: (str) => {

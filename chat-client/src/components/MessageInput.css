@@ -1,0 +1,30 @@
+.message-input-container {
+  display: flex;
+  padding: 10px;
+  background-color: #f0f0f0;
+}
+
+.message-input {
+  flex-grow: 1;
+  border: none;
+  padding: 10px;
+  border-radius: 20px;
+  margin-right: 10px;
+}
+
+.message-input:focus {
+  outline: none;
+}
+
+.send-button {
+  background-color: #ffeb33;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.send-button:hover {
+  background-color: #fdd835;
+}

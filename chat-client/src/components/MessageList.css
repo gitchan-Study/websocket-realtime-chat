@@ -1,0 +1,38 @@
+.message-list {
+  flex-grow: 1;
+  padding: 20px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.message-item {
+  display: flex;
+  margin-bottom: 10px;
+  max-width: 70%;
+}
+
+.message-item.me {
+  align-self: flex-end;
+  flex-direction: row-reverse;
+}
+
+.message-item.other {
+  align-self: flex-start;
+}
+
+.message-bubble {
+  padding: 10px 15px;
+  border-radius: 20px;
+  color: black;
+}
+
+.message-item.me .message-bubble {
+  background-color: #ffeb33; /* My message bubble color */
+  border-bottom-right-radius: 5px;
+}
+
+.message-item.other .message-bubble {
+  background-color: #ffffff; /* Other's message bubble color */
+  border-bottom-left-radius: 5px;
+}

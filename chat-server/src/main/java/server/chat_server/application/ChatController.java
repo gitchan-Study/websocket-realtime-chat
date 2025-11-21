@@ -24,23 +24,12 @@ public class ChatController {
         chatService.saveMessage(chatMessage);
 
         // 수신된 메시지 로깅
-        System.out.println("Received private message: " +
+        System.out.println("Broadcasting message: " +
                            "From: " + chatMessage.getSender() +
                            ", To: " + chatMessage.getRecipient() +
                            ", Content: " + chatMessage.getContent());
 
-        // 수신자에게 메시지 전송
-        messagingTemplate.convertAndSendToUser(
-            chatMessage.getRecipient(),
-            "/queue/messages",
-            chatMessage
-        );
-
-        // 발신자에게도 메시지 전송 (자신이 보낸 메시지를 볼 수 있도록)
-        messagingTemplate.convertAndSendToUser(
-            chatMessage.getSender(),
-            "/queue/messages",
-            chatMessage
-        );
+        // 모든 구독자에게 메시지 브로드캐스트
+        messagingTemplate.convertAndSend("/topic/public", chatMessage);
     }
 }

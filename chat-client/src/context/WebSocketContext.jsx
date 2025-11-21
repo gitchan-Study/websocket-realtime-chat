@@ -23,7 +23,7 @@ export const WebSocketProvider = ({ children }) => {
         setIsConnected(true);
         setUser({ username });
 
-        client.subscribe(`/user/${username}/queue/messages`, (message) => {
+        client.subscribe('/topic/public', (message) => {
           const receivedMessage = JSON.parse(message.body);
           setMessages((prevMessages) => [...prevMessages, receivedMessage]);
         });

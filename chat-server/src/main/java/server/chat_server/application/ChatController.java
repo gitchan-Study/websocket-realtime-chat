@@ -5,31 +5,30 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Controller;
 import server.chat_server.entity.ChatMessage;
-import server.chat_server.service.ChatService;
-
-import java.time.LocalDateTime;
 
 @Controller
 public class ChatController {
 
     private final SimpMessageSendingOperations messagingTemplate;
-    private final ChatService chatService;
 
-    public ChatController(SimpMessageSendingOperations messagingTemplate, ChatService chatService) {
+    public ChatController(SimpMessageSendingOperations messagingTemplate) {
         this.messagingTemplate = messagingTemplate;
-        this.chatService = chatService;
     }
 
-    @MessageMapping("/chat.sendMessage")
-    public void sendMessage(@Payload ChatMessage chatMessage) {
-        ChatMessage messageWithTimestamp = ChatMessage.builder()
-                .id(chatMessage.getId())
-                .roomId(chatMessage.getRoomId())
-                .userId(chatMessage.getUserId())
-                .message(chatMessage.getMessage())
-                .timestamp(LocalDateTime.now())
-                .build();
-        chatService.saveMessage(messageWithTimestamp);
-        messagingTemplate.convertAndSend("/topic/public", messageWithTimestamp);
+    @MessageMapping("/chat.privateMessage")
+    public void sendPrivateMessage(@Payload ChatMessage chatMessage) {
+        // 수신자에게 메시지 전송
+        messagingTemplate.convertAndSendToUser(
+            chatMessage.getRecipient(),
+            "/queue/messages",
+            chatMessage
+        );
+
+        // 발신자에게도 메시지 전송 (자신이 보낸 메시지를 볼 수 있도록)
+        messagingTemplate.convertAndSendToUser(
+            chatMessage.getSender(),
+            "/queue/messages",
+            chatMessage
+        );
     }
 }

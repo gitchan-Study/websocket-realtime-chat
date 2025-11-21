@@ -4,12 +4,12 @@ import './MessageInput.css';
 
 const MessageInput = () => {
   const [messageText, setMessageText] = useState('');
-  const { sendMessage } = useContext(WebSocketContext);
+  const { sendMessage, recipient } = useContext(WebSocketContext);
 
   const handleSendMessage = (e) => {
     e.preventDefault();
-    if (messageText.trim()) {
-      sendMessage(messageText);
+    if (messageText.trim() && recipient.trim()) {
+      sendMessage(messageText, recipient);
       setMessageText('');
     }
   };

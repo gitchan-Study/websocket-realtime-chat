@@ -9,6 +9,7 @@ export const WebSocketProvider = ({ children }) => {
   const [messages, setMessages] = useState([]);
   const [user, setUser] = useState(null);
   const [isConnected, setIsConnected] = useState(false);
+  const [recipient, setRecipient] = useState('');
 
   const connect = useCallback((username) => {
     const socket = new SockJS('http://localhost:8080/ws'); // 서버 WebSocket 엔드포인트
@@ -22,7 +23,7 @@ export const WebSocketProvider = ({ children }) => {
         setIsConnected(true);
         setUser({ username });
 
-        client.subscribe('/topic/messages', (message) => {
+        client.subscribe(`/user/${username}/queue/messages`, (message) => {
           const receivedMessage = JSON.parse(message.body);
           setMessages((prevMessages) => [...prevMessages, receivedMessage]);
         });
@@ -47,15 +48,16 @@ export const WebSocketProvider = ({ children }) => {
     }
   }, [stompClient]);
 
-  const sendMessage = useCallback((messageText) => {
-    if (stompClient && isConnected && user) {
+  const sendMessage = useCallback((messageText, recipient) => {
+    if (stompClient && isConnected && user && recipient) {
       const chatMessage = {
         sender: user.username,
+        recipient: recipient,
         content: messageText,
         type: 'CHAT'
       };
       stompClient.publish({
-        destination: '/app/chat.sendMessage',
+        destination: '/app/chat.privateMessage',
         body: JSON.stringify(chatMessage),
       });
     }
@@ -68,6 +70,8 @@ export const WebSocketProvider = ({ children }) => {
     messages,
     user,
     isConnected,
+    recipient,
+    setRecipient,
   };
 
   return (

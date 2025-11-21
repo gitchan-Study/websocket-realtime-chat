@@ -9,7 +9,9 @@ const LoginPage = () => {
   const handleLogin = (e) => {
     e.preventDefault();
     if (username.trim()) {
-      connect(username);
+      const randomSuffix = Math.floor(Math.random() * 1000) + 1;
+      const finalUsername = `${username.trim()}_${randomSuffix}`;
+      connect(finalUsername);
     }
   };
 
